@@ -8,6 +8,7 @@ import com.example.engsftwgraph.view.LoginScreen
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import com.example.engsftwgraph.checkUserLoggedIn
+import com.example.engsftwgraph.view.SignUpScreen
 
 
 @Composable
@@ -21,6 +22,9 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable("home") {
             HomeScreen(navController = navController)
+        }
+        composable("signup") {
+            SignUpScreen(navController = navController)
         }
     }
 }

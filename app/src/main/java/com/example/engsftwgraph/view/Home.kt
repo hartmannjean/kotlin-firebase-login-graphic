@@ -3,15 +3,12 @@ package com.example.engsftwgraph.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,7 +17,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -84,7 +80,7 @@ fun HomeScaffold(
                             }
                         }
                     }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Sair")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -113,7 +109,6 @@ fun HomeScaffold(
 
 @Composable
 fun Chart1Content(modifier: Modifier = Modifier) {
-    // Conteúdo do Gráfico 1
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -128,7 +123,6 @@ fun Chart1Content(modifier: Modifier = Modifier) {
 
 @Composable
 fun Chart2Content(modifier: Modifier = Modifier) {
-    // Conteúdo do Gráfico 2
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -141,11 +135,11 @@ fun Chart2Content(modifier: Modifier = Modifier) {
     }
 }
 
+//Gráfico de linha
 @Composable
 fun LineChartView() {
     AndroidView(
         factory = { context ->
-            // Create and configure the chart
             val chart = LineChart(context)
             chart.description.isEnabled = false
             chart.setNoDataText("No data available")
@@ -159,8 +153,8 @@ fun LineChartView() {
             )
 
             val dataSet = LineDataSet(values, "Sample Data")
-            dataSet.color = androidx.compose.ui.graphics.Color.Blue.toArgb()  // Convert Compose Color to ARGB
-            dataSet.valueTextColor = androidx.compose.ui.graphics.Color.Black.toArgb()
+            dataSet.color = Color.Blue.toArgb()
+            dataSet.valueTextColor = Color.Black.toArgb()
 
             val data = LineData(dataSet as ILineDataSet)
             chart.data = data
@@ -171,11 +165,11 @@ fun LineChartView() {
     )
 }
 
+//Gráfico de radar
 @Composable
 fun RadarChartView() {
     AndroidView(
         factory = { context ->
-            // Create and configure the radar chart
             val chart = RadarChart(context)
             chart.description.isEnabled = false
             chart.isRotationEnabled = false
@@ -192,8 +186,8 @@ fun RadarChartView() {
             )
 
             val dataSet = RadarDataSet(entries, "Sample Data")
-            dataSet.color = androidx.compose.ui.graphics.Color.Blue.toArgb()  // Convert Compose Color to ARGB
-            dataSet.valueTextColor = androidx.compose.ui.graphics.Color.Black.toArgb()
+            dataSet.color = Color.Blue.toArgb()
+            dataSet.valueTextColor = Color.Black.toArgb()
             dataSet.valueTextSize = 16f
 
             val radarData = RadarData(dataSet)
