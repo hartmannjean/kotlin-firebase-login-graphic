@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.engsftwgraph.ui.components.CustomSnackbar
 import com.example.engsftwgraph.ui.components.EmailField
 import com.example.engsftwgraph.ui.components.PasswordField
 import com.example.engsftwgraph.util.getFirebaseAuthErrorMessage
@@ -25,11 +26,23 @@ fun SignUpScreen(navController: NavController) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+    var showSnackbar by remember { mutableStateOf(false) }
+    var snackbarMessage by remember { mutableStateOf("") }
 
+    Scaffold(
+        snackbarHost = {
+            if (showSnackbar) {
+                CustomSnackbar(
+                    message = snackbarMessage,
+                    onDismiss = { showSnackbar = false }
+                )
+            }
+        }
+    ) { paddingValues ->
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -52,6 +65,11 @@ fun SignUpScreen(navController: NavController) {
         CreateAccountButton(
             isLoading = isLoading,
             onClick = {
+                if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                    snackbarMessage = "Por favor, preencha todos os campos."
+                    showSnackbar = true
+                    return@CreateAccountButton
+                }
                 if (password == confirmPassword) {
                     isLoading = true
                     auth.createUserWithEmailAndPassword(email, password)
@@ -64,8 +82,8 @@ fun SignUpScreen(navController: NavController) {
                                     }
                                 }
                             } else {
-                                val errorMessage = getFirebaseAuthErrorMessage(task.exception)
-                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                snackbarMessage = getFirebaseAuthErrorMessage(task.exception)
+                                showSnackbar = true
                             }
                         }
                 } else {
@@ -73,6 +91,7 @@ fun SignUpScreen(navController: NavController) {
                 }
             }
         )
+    }
     }
 }
 
