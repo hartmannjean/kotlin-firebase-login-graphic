@@ -30,7 +30,7 @@ fun CustomSnackbar(
         modifier = Modifier.padding(16.dp),
         snackbar = {
             Snackbar(
-                containerColor = Color(0xFFFFA500), // Error Orange
+                containerColor = Color(0xFFFFA500),
                 contentColor = Color.White,
                 action = {
                     TextButton(onClick = onDismiss) {
