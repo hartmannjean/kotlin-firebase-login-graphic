@@ -1,4 +1,4 @@
-# Kotlin Grafico App with Login
+# Kotlin Grafico App com Login
 
 Este projeto é um aplicativo Kotlin que demonstra como implementar autenticação com Firebase e visualizar gráficos em uma aplicação Android. O projeto utiliza Jetpack Compose para a interface do usuário e inclui exemplos de gráficos usando a biblioteca MPAndroidChart.
 
