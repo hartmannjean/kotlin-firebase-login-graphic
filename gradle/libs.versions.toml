@@ -30,6 +30,7 @@ charts-iosx64 = { module = "io.github.dautovicharis:charts-iosx64", version.ref 
 charts-js = { module = "io.github.dautovicharis:charts-js", version.ref = "chartsIosx64" }
 charts-jvm = { module = "io.github.dautovicharis:charts-jvm", version.ref = "chartsIosx64" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

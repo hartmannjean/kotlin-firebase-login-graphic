@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.firestore)
     implementation (libs.philjay.mpandroidchart)
     implementation(libs.ui)
     implementation(libs.androidx.navigation.compose.v253)
