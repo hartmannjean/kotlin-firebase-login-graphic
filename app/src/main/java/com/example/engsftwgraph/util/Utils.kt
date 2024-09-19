@@ -25,3 +25,5 @@ fun getFirebaseAuthErrorMessage(exception: Exception?): String {
         else -> "Erro desconhecido. Tente novamente."
     }
 }
+
+

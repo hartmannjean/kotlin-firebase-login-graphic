@@ -5,20 +5,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.engsftwgraph.ui.components.EmailField
 import com.example.engsftwgraph.ui.components.LoginButton
 import com.example.engsftwgraph.ui.components.PasswordField
 import com.example.engsftwgraph.ui.components.TitleText
 import com.example.engsftwgraph.ui.components.CustomSnackbar
-import com.example.engsftwgraph.util.getFirebaseAuthErrorMessage
-import com.google.firebase.auth.FirebaseAuth
+import com.example.engsftwgraph.viewModel.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    val auth = FirebaseAuth.getInstance()
-
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginViewModel = viewModel()
+) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -41,19 +44,13 @@ fun LoginScreen(navController: NavController) {
                 .padding(16.dp)
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
         ) {
             TitleText()
 
-            Spacer(modifier = Modifier.height(20.dp))
-
             EmailField(email) { email = it }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             PasswordField(password) { password = it }
-
-            Spacer(modifier = Modifier.height(20.dp))
 
             LoginButton(
                 isLoading = isLoading,
@@ -64,24 +61,24 @@ fun LoginScreen(navController: NavController) {
                         return@LoginButton
                     }
                     isLoading = true
-                    auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
+                    viewModel.signIn(
+                        context,
+                        email = email,
+                        password = password,
+                        onSuccess = {
                             isLoading = false
-                            if (task.isSuccessful) {
-                                navController.navigate("home") {
-                                    popUpTo("login") {
-                                        inclusive = true
-                                    }
-                                }
-                            } else {
-                                snackbarMessage = getFirebaseAuthErrorMessage(task.exception)
-                                showSnackbar = true
+                            navController.navigate("home") {
+                                popUpTo("login") { inclusive = true }
                             }
+                        },
+                        onError = { error ->
+                            isLoading = false
+                            snackbarMessage = error
+                            showSnackbar = true
                         }
+                    )
                 }
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = {
                 navController.navigate("signup")

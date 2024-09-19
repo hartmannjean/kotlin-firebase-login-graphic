@@ -2,96 +2,88 @@ package com.example.engsftwgraph.view
 
 import CreateAccountButton
 import androidx.compose.runtime.Composable
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.engsftwgraph.ui.components.AccountField
 import com.example.engsftwgraph.ui.components.CustomSnackbar
 import com.example.engsftwgraph.ui.components.EmailField
+import com.example.engsftwgraph.ui.components.NameField
 import com.example.engsftwgraph.ui.components.PasswordField
-import com.example.engsftwgraph.util.getFirebaseAuthErrorMessage
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.engsftwgraph.viewModel.SignUpViewModel
 
 @Composable
-fun SignUpScreen(navController: NavController) {
-    val context = LocalContext.current
-    val auth = FirebaseAuth.getInstance()
+fun SignUpScreen(
+    navController: NavController, viewModel: SignUpViewModel = viewModel()
+) {
 
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var accountnumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var showSnackbar by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
 
-    Scaffold(
-        snackbarHost = {
-            if (showSnackbar) {
-                CustomSnackbar(
-                    message = snackbarMessage,
-                    onDismiss = { showSnackbar = false }
-                )
-            }
+    Scaffold(snackbarHost = {
+        if (showSnackbar) {
+            CustomSnackbar(message = snackbarMessage, onDismiss = { showSnackbar = false })
         }
-    ) { paddingValues ->
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Criar Conta", style = MaterialTheme.typography.headlineMedium)
+    }) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
+        ) {
+            Text(text = "Criar Conta", style = MaterialTheme.typography.headlineMedium)
 
-        Spacer(modifier = Modifier.height(20.dp))
+            NameField(name) { name = it }
 
-        EmailField(email) { email = it }
+            AccountField(accountnumber) { accountnumber = it }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            EmailField(email) { email = it }
 
-        PasswordField(password) { password = it }
+            PasswordField(password) { password = it }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            PasswordField(confirmPassword) { confirmPassword = it }
 
-        PasswordField(confirmPassword) { confirmPassword = it }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        CreateAccountButton(
-            isLoading = isLoading,
-            onClick = {
+            CreateAccountButton(isLoading = isLoading, onClick = {
                 if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     snackbarMessage = "Por favor, preencha todos os campos."
                     showSnackbar = true
                     return@CreateAccountButton
                 }
-                if (password == confirmPassword) {
-                    isLoading = true
-                    auth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            isLoading = false
-                            if (task.isSuccessful) {
-                                navController.navigate("home") {
-                                    popUpTo("signup") {
-                                        inclusive = true
-                                    }
-                                }
-                            } else {
-                                snackbarMessage = getFirebaseAuthErrorMessage(task.exception)
-                                showSnackbar = true
+
+                isLoading = true
+                viewModel.createUser(name = name,
+                    email = email,
+                    accountNumber = accountnumber,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    onSuccess = {
+                        isLoading = false
+                        navController.navigate("home") {
+                            popUpTo("signup") {
+                                inclusive = true
                             }
                         }
-                } else {
-                    Toast.makeText(context, "As senhas não coincidem", Toast.LENGTH_SHORT).show()
-                }
-            }
-        )
-    }
+                    },
+                    onError = { errorMessage ->
+                        isLoading = false
+                        snackbarMessage = errorMessage
+                        showSnackbar = true
+                    })
+            })
+        }
     }
 }
 

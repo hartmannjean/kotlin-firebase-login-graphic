@@ -1,5 +1,7 @@
 package com.example.engsftwgraph.view
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,9 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import com.example.engsftwgraph.network.logoutUser
+import com.example.engsftwgraph.util.UserPreferences
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.data.Entry
@@ -39,7 +44,6 @@ import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -67,13 +71,16 @@ fun HomeScaffold(
     onScreenSelected: (String) -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ) {
+    val context = LocalContext.current
+    val userModel = UserPreferences.getUserData(context)
+    Log.d(TAG, "HomeScaffold: $userModel")
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Home") },
+                title = { Text(text = "Bem Vindo! ${userModel?.name}") },
                 actions = {
                     IconButton(onClick = {
-                        FirebaseAuth.getInstance().signOut()
+                        logoutUser(context)
                         navController.navigate("login") {
                             popUpTo("home") {
                                 inclusive = true
