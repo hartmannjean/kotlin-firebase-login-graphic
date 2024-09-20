@@ -28,7 +28,7 @@ class LoginViewModel : ViewModel() {
                 onSuccess()
             },
             onFailure = { exception ->
-                onError(exception?.message ?: "Erro desconhecido")
+                onError(exception)
             }
         )
     }

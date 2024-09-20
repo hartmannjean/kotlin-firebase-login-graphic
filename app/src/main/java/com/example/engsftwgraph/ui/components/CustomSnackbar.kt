@@ -14,15 +14,18 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CustomSnackbar(
+    snackbarHostState: SnackbarHostState,
     message: String,
     onDismiss: () -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(message) {
-        snackbarHostState.showSnackbar(
-            message = message,
-            duration = SnackbarDuration.Short
-        )
+        if (message.isNotEmpty()) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+            onDismiss()
+        }
     }
 
     SnackbarHost(

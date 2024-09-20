@@ -1,5 +1,10 @@
 package com.example.engsftwgraph.util
 
+import android.util.Log
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Locale
+
 fun getFirebaseAuthErrorMessage(exception: Exception?): String {
     return when (exception?.message) {
         "There is no user record corresponding to this identifier. The user may have been deleted." ->
@@ -26,4 +31,30 @@ fun getFirebaseAuthErrorMessage(exception: Exception?): String {
     }
 }
 
+fun formatAccountNumber(accountNumber: String): String {
+    return if (accountNumber.length > 2) {
+        "${accountNumber.dropLast(2)}-${accountNumber.takeLast(2)}"
+    } else {
+        accountNumber
+    }
+}
+
+// Função auxiliar para converter a data em timestamp
+fun dateToTimestamp(dateString: String): Float {
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    return try {
+        val date = formatter.parse(dateString)
+        val timestamp = date?.time?.toFloat() ?: 0f
+        Log.d("DateToTimestamp", "Converted $dateString to $timestamp")
+        timestamp
+    } catch (e: ParseException) {
+        Log.e("DateError", "Invalid date format: $dateString", e)
+        0f
+    }
+}
+
+fun isValidEmail(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+    return emailRegex.matches(email)
+}
 
