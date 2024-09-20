@@ -5,6 +5,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun TitleText() {
-    Text(text = "Login", style = MaterialTheme.typography.bodyMedium)
+fun TitleText(text: String = "Login") {
+    Text(text = text, style = MaterialTheme.typography.headlineMedium)
 }
