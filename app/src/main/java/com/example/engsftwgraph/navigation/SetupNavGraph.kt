@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.example.engsftwgraph.view.HomeScreen
 import com.example.engsftwgraph.view.LoginScreen
 import com.example.engsftwgraph.view.SignUpScreen
+import com.example.engsftwgraph.viewModel.HomeViewModel
 import com.example.engsftwgraph.viewModel.LoginViewModel
 import com.example.engsftwgraph.viewModel.SignUpViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +26,8 @@ fun AppNavHost(navController: NavHostController) {
             LoginScreen(navController = navController, viewModel = loginViewModel)
         }
         composable(AppRoutes.HOME) {
-            HomeScreen(navController = navController)
+            val homeViewModel: HomeViewModel = viewModel()
+            HomeScreen(navController = navController, viewModel = homeViewModel)
         }
         composable(AppRoutes.SIGNUP) {
             val signUpViewModel: SignUpViewModel = viewModel()
