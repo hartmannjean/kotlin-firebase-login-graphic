@@ -56,13 +56,21 @@ class SignUpViewModel : ViewModel() {
         if (!isValidEmail(email)) {
             return "Por favor, insira um email válido."
         }
-        if (accountNumber.length != 9) {
-            return "O número da conta deve ter exatamente 9 dígitos."
-        }
         if (password != confirmPassword) {
             return "As senhas não coincidem."
         }
+        if (!isValidPassword(password)) {
+            return "A senha deve ter pelo menos 6 caracteres, incluindo letras, números e caracteres especiais."
+        }
         return null
     }
-}
 
+    private fun isValidPassword(password: String): Boolean {
+        val hasUpperCase = password.any { it.isUpperCase() }
+        val hasLowerCase = password.any { it.isLowerCase() }
+        val hasDigit = password.any { it.isDigit() }
+        val hasSpecialChar = password.any { "!@#$%^&*()-_=+".contains(it) }
+
+        return password.length >= 6 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar
+    }
+}
