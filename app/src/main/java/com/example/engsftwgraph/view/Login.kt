@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.engsftwgraph.navigation.AppRoutes
 import com.example.engsftwgraph.ui.components.EmailField
 import com.example.engsftwgraph.ui.components.LoginButton
 import com.example.engsftwgraph.ui.components.PasswordField
@@ -27,14 +28,14 @@ fun LoginScreen(
     var isLoading by remember { mutableStateOf(false) }
     var showSnackbar by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         snackbarHost = {
             if (showSnackbar) {
-                CustomSnackbar(
-                    message = snackbarMessage,
-                    onDismiss = { showSnackbar = false }
-                )
+                CustomSnackbar(snackbarHostState, snackbarMessage) {
+                    showSnackbar = false
+                }
             }
         }
     ) { paddingValues ->
@@ -50,7 +51,9 @@ fun LoginScreen(
 
             EmailField(email) { email = it }
 
-            PasswordField(password) { password = it }
+            PasswordField(password = password,
+                { password = it }
+            )
 
             LoginButton(
                 isLoading = isLoading,
@@ -67,8 +70,8 @@ fun LoginScreen(
                         password = password,
                         onSuccess = {
                             isLoading = false
-                            navController.navigate("home") {
-                                popUpTo("login") { inclusive = true }
+                            navController.navigate(AppRoutes.HOME) {
+                                popUpTo(AppRoutes.LOGIN) { inclusive = true }
                             }
                         },
                         onError = { error ->
