@@ -1,14 +1,19 @@
 package com.example.engsftwgraph.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.engsftwgraph.R
 import com.example.engsftwgraph.navigation.AppRoutes
 import com.example.engsftwgraph.ui.components.EmailField
 import com.example.engsftwgraph.ui.components.LoginButton
@@ -42,18 +47,23 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(top = 80.dp, start = 16.dp, end = 16.dp)
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Top)
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                modifier = Modifier.size(100.dp),
+                colorFilter = ColorFilter.tint(Color(0xFF6650a4))
+            )
+            Spacer(modifier = Modifier.height(120.dp))
             TitleText()
 
             EmailField(email) { email = it }
 
-            PasswordField(password = password,
-                { password = it }
-            )
+            PasswordField(password = password, { password = it })
 
             LoginButton(
                 isLoading = isLoading,
