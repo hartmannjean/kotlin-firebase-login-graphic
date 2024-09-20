@@ -8,11 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 @Composable
-fun PasswordField(password: String, onValueChange: (String) -> Unit) {
+fun PasswordField(
+    password: String,
+    onValueChange: (String) -> Unit,
+    label: String = "Senha"
+) {
     OutlinedTextField(
         value = password,
         onValueChange = onValueChange,
-        label = { Text("Senha") },
+        label = { Text(label) },
         visualTransformation = PasswordVisualTransformation(),
         modifier = Modifier.fillMaxWidth()
     )

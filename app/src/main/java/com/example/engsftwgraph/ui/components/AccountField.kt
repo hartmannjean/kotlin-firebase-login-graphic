@@ -10,7 +10,11 @@ import androidx.compose.ui.Modifier
 fun AccountField(number: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = number,
-        onValueChange = onValueChange,
+        onValueChange = { newValue ->
+            if (newValue.length <= 9 && newValue.all { it.isDigit() }) {
+                onValueChange(newValue)
+            }
+        },
         label = { Text("Account Number") },
         modifier = Modifier.fillMaxWidth()
     )
