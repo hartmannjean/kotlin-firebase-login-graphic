@@ -58,8 +58,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import com.example.engsftwgraph.R
+import com.example.engsftwgraph.model.ProductMonthData
 import com.example.engsftwgraph.model.chartData
+import com.example.engsftwgraph.model.productMonthData
 import com.example.engsftwgraph.navigation.AppRoutes
+import com.example.engsftwgraph.util.MonthValueFormatter
 import com.example.engsftwgraph.util.formatAccountNumber
 
 
@@ -105,6 +108,7 @@ fun HomeScreen(
         when (selectedScreen) {
             "chart1" -> Chart1Content(Modifier.padding(paddingValues))
             "chart2" -> Chart2Content(Modifier.padding(paddingValues))
+            "chart3" -> Chart3Content(Modifier.padding(paddingValues))
         }
     }
 }
@@ -225,11 +229,11 @@ fun HomeScaffold(
                     icon = {
                         Icon(
                             painterResource(id = R.drawable.linechart),
-                            contentDescription = "Gráfico de linha",
+                            contentDescription = "Linha",
                             modifier = Modifier.size(24.dp)
                         )
                     },
-                    label = { Text("Gráfico de linha") },
+                    label = { Text("linha") },
                     selected = selectedScreen == "chart1",
                     onClick = { onScreenSelected("chart1") }
                 )
@@ -237,13 +241,25 @@ fun HomeScaffold(
                     icon = {
                         Icon(
                             painterResource(id = R.drawable.barchart),
-                            contentDescription = "Grafico de barra",
+                            contentDescription = "Barra",
                             modifier = Modifier.size(24.dp)
                         )
                     },
-                    label = { Text("Grafico de barra") },
+                    label = { Text("Barra") },
                     selected = selectedScreen == "chart2",
                     onClick = { onScreenSelected("chart2") }
+                )
+                NavigationBarItem(
+                    icon = {
+                        Icon(
+                            painterResource(id = R.drawable.linechar_2),
+                            contentDescription = "Linha cruzada",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
+                    label = { Text("Linha cruzada") },
+                    selected = selectedScreen == "chart3",
+                    onClick = { onScreenSelected("chart3") }
                 )
             }
         }
@@ -261,10 +277,9 @@ fun Chart1Content(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Gráfico de movimentação da carteira de pontos.",
+            text = "Gráfico de movimentação da carteira de pontos por mês.",
             style = MaterialTheme.typography.bodyMedium
         )
-
 
         LineChartView(entries = chartData)
     }
@@ -284,14 +299,33 @@ fun Chart2Content(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyMedium
         )
 
-
         BarChartView(productData = productDataList)
+    }
+}
+
+@Composable
+fun Chart3Content(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Gráfico de linha cruzada (Pontos por produto e mês)",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        CrossedLineChartView(productMonthData = productMonthData)
     }
 }
 
 
 @Composable
 fun LineChartView(entries: List<Entry>) {
+    val months = listOf("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+
     AndroidView(
         factory = { context ->
             val chart = LineChart(context)
@@ -310,6 +344,8 @@ fun LineChartView(entries: List<Entry>) {
                 val xMin = entries.minOf { it.x }
                 chart.xAxis.axisMinimum = xMin
                 chart.xAxis.axisMaximum = xMax
+
+                chart.xAxis.valueFormatter = MonthValueFormatter(months)
             }
 
             chart.invalidate()
@@ -347,3 +383,57 @@ fun BarChartView(productData: List<ProductData>) {
         modifier = Modifier.fillMaxSize()
     )
 }
+
+@Composable
+fun CrossedLineChartView(productMonthData: List<ProductMonthData>) {
+    val months = productMonthData.map { it.month }
+
+    AndroidView(
+        factory = { context ->
+            val chart = LineChart(context)
+            chart.description.isEnabled = false
+            chart.setNoDataText("No data available")
+
+            val productEntriesMap = mutableMapOf<String, MutableList<Entry>>()
+
+            // Organize data into entries for each product
+            productMonthData.forEachIndexed { index, data ->
+                data.productPoints.forEach { (product, points) ->
+                    val entry = Entry(index.toFloat(), points)
+                    productEntriesMap.getOrPut(product) { mutableListOf() }.add(entry)
+                }
+            }
+
+            val lineDataSets = productEntriesMap.map { (product, entries) ->
+                LineDataSet(entries, product).apply {
+                    color = when (product) {
+                        "Produto A" -> Color(0xFF6200EE).toArgb()
+                        "Produto B" -> Color(0xFF03DAC5).toArgb()
+                        "Produto C" -> Color(0xFFFF5722).toArgb()
+                        "Produto D" -> Color(0xFFFFC107).toArgb()
+                        "Produto E" -> Color(0xFF4CAF50).toArgb()
+                        else -> Color.Black.toArgb()
+                    }
+                    valueTextColor = Color.Black.toArgb()
+                    lineWidth = 2f
+                }
+            }
+
+            val lineData = LineData(lineDataSets)
+            chart.data = lineData
+
+            // Set X-axis labels to months
+            chart.xAxis.valueFormatter = IndexAxisValueFormatter(months)
+            chart.xAxis.granularity = 1f
+            chart.xAxis.position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
+
+            // Format chart
+            chart.axisLeft.axisMinimum = 0f
+            chart.invalidate()
+
+            chart
+        },
+        modifier = Modifier.fillMaxSize().padding(16.dp)
+    )
+}
+
