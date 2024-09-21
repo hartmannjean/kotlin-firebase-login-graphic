@@ -15,7 +15,7 @@ fun AccountField(number: String, onValueChange: (String) -> Unit) {
                 onValueChange(newValue)
             }
         },
-        label = { Text("Account Number") },
+        label = { Text("Número da conta") },
         modifier = Modifier.fillMaxWidth()
     )
 }

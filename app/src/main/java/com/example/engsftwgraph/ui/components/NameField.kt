@@ -11,7 +11,7 @@ fun NameField(name: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = name,
         onValueChange = onValueChange,
-        label = { Text("Name") },
+        label = { Text("Nome") },
         modifier = Modifier.fillMaxWidth()
     )
 }

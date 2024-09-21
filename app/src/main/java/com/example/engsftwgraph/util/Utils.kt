@@ -1,6 +1,7 @@
 package com.example.engsftwgraph.util
 
 import android.util.Log
+import com.github.mikephil.charting.formatter.ValueFormatter
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -9,24 +10,34 @@ fun getFirebaseAuthErrorMessage(exception: Exception?): String {
     return when (exception?.message) {
         "There is no user record corresponding to this identifier. The user may have been deleted." ->
             "Usuário não encontrado."
+
         "The password is invalid or the user does not have a password." ->
             "Senha incorreta."
+
         "The email address is badly formatted." ->
             "Formato de email inválido."
+
         "A network error (such as timeout, interrupted connection or unreachable host) has occurred." ->
             "Erro de rede. Verifique sua conexão."
+
         "The user account has been disabled by an administrator." ->
             "Conta desativada."
+
         "The password must be 6 characters long or more." ->
             "A senha deve ter pelo menos 6 caracteres."
+
         "The email address is already in use by another account." ->
             "O email já está em uso."
+
         "Password should be at least 6 characters" ->
             "A senha deve ter pelo menos 6 caracteres."
+
         "The email is badly formatted" ->
             "Formato de email inválido."
+
         "A network error (timeout, interrupted connection, or unreachable host) occurred." ->
             "Erro de rede. Verifique sua conexão."
+
         else -> "Erro desconhecido. Tente novamente."
     }
 }
@@ -39,7 +50,17 @@ fun formatAccountNumber(accountNumber: String): String {
     }
 }
 
-// Função auxiliar para converter a data em timestamp
+class MonthValueFormatter(private val months: List<String>) : ValueFormatter() {
+    override fun getFormattedValue(value: Float): String {
+        val index = value.toInt() - 1
+        return if (index >= 0 && index < months.size) {
+            months[index]
+        } else {
+            value.toString()
+        }
+    }
+}
+
 fun dateToTimestamp(dateString: String): Float {
     val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
     return try {
