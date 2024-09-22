@@ -10,8 +10,8 @@ Este projeto é um aplicativo Kotlin que demonstra como implementar autenticaç�
 
 ## Tecnologias
 
-- **Kotlin:** Linguagem de programação principal para o desenvolvimento Android(https://firebase.google.com/docs/auth?hl=pt).
-- **Firebase Authentication:** Serviço para autenticação de usuários com email e senha.
+- **Kotlin:** Linguagem de programação principal para o desenvolvimento Android.
+- **Firebase Authentication:** Serviço para autenticação de usuários com email e senha(https://firebase.google.com/docs/auth?hl=pt).
 - **Jetpack Compose:** Framework moderno para construção de interfaces de usuário em Android.
 - **MPAndroidChart:** Biblioteca para visualização de gráficos.
 
