@@ -2,6 +2,9 @@
 
 Este projeto é um aplicativo Kotlin que demonstra como implementar autenticação com Firebase e visualizar gráficos em uma aplicação Android. O projeto utiliza Jetpack Compose para a interface do usuário e inclui exemplos de gráficos usando a biblioteca MPAndroidChart.
 
+![image](https://github.com/user-attachments/assets/4d701766-c737-43b5-903d-3cad84f03ba4)
+
+
 ## Funcionalidades
 
 - **Autenticação com Firebase:** Permite aos usuários se autenticarem usando email e senha.
